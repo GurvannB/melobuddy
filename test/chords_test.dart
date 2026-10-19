@@ -8,7 +8,7 @@ Note displayedNote() =>
     Note.values.singleWhere((n) => find.text(n.label).evaluate().isNotEmpty);
 
 VoidCallback? revealOnPressed(WidgetTester tester) => tester
-    .widget<ElevatedButton>(find.widgetWithText(ElevatedButton, 'Reveal chord'))
+    .widget<ElevatedButton>(find.widgetWithText(ElevatedButton, "Révéler l'accord"))
     .onPressed;
 
 void main() {
@@ -48,8 +48,8 @@ void main() {
     }
   });
 
-  group('New note flow', () {
-    testWidgets('shows no note before tapping New note', (tester) async {
+  group('Flux nouvelle note', () {
+    testWidgets('n\'affiche aucune note avant de taper sur Nouvelle note', (tester) async {
       await tester.pumpWidget(const MyApp());
 
       for (final note in Note.values) {
@@ -57,10 +57,22 @@ void main() {
       }
     });
 
-    testWidgets('New note shows exactly one note', (tester) async {
+    testWidgets('le bouton Révéler l\'accord est désactivé sans note',
+        (tester) async {
       await tester.pumpWidget(const MyApp());
 
-      await tester.tap(find.text('New note'));
+      expect(revealOnPressed(tester), isNull);
+
+      await tester.tap(find.text('Nouvelle note'));
+      await tester.pump();
+
+      expect(revealOnPressed(tester), isNotNull);
+    });
+
+    testWidgets('Nouvelle note affiche exactement une note', (tester) async {
+      await tester.pumpWidget(const MyApp());
+
+      await tester.tap(find.text('Nouvelle note'));
       await tester.pump();
 
       final shown = Note.values
@@ -68,32 +80,32 @@ void main() {
       expect(shown, hasLength(1));
     });
 
-    testWidgets('Reveal chord shows the chord of the displayed note and '
-        'gets disabled', (tester) async {
+    testWidgets('Révéler l\'accord affiche l\'accord de la note affichée et '
+        'se désactive', (tester) async {
       await tester.pumpWidget(const MyApp());
-      await tester.tap(find.text('New note'));
+      await tester.tap(find.text('Nouvelle note'));
       await tester.pump();
       final note = displayedNote();
 
       expect(find.textContaining(' - '), findsNothing);
       expect(revealOnPressed(tester), isNotNull);
 
-      await tester.tap(find.text('Reveal chord'));
+      await tester.tap(find.text("Révéler l'accord"));
       await tester.pump();
 
       expect(find.text(note.getChord(ChordDir.asc).join(' - ')), findsOneWidget);
       expect(revealOnPressed(tester), isNull);
     });
 
-    testWidgets('New note after a reveal hides the answer again',
+    testWidgets('Nouvelle note après une révélation cache de nouveau la réponse',
         (tester) async {
       await tester.pumpWidget(const MyApp());
-      await tester.tap(find.text('New note'));
+      await tester.tap(find.text('Nouvelle note'));
       await tester.pump();
-      await tester.tap(find.text('Reveal chord'));
+      await tester.tap(find.text("Révéler l'accord"));
       await tester.pump();
 
-      await tester.tap(find.text('New note'));
+      await tester.tap(find.text('Nouvelle note'));
       await tester.pump();
 
       expect(find.textContaining(' - '), findsNothing);
@@ -101,8 +113,8 @@ void main() {
     });
   });
 
-  group('Direction switch', () {
-    testWidgets('shows both direction labels and starts on ascendant',
+  group('Switch de direction', () {
+    testWidgets('affiche les deux libellés et démarre sur ascendant',
         (tester) async {
       await tester.pumpWidget(const MyApp());
 
@@ -111,16 +123,16 @@ void main() {
       expect(tester.widget<Switch>(find.byType(Switch)).value, isFalse);
     });
 
-    testWidgets('descendant reveals the descending chord', (tester) async {
+    testWidgets('descendant révèle l\'accord descendant', (tester) async {
       await tester.pumpWidget(const MyApp());
       await tester.tap(find.byType(Switch));
       await tester.pump();
       expect(tester.widget<Switch>(find.byType(Switch)).value, isTrue);
 
-      await tester.tap(find.text('New note'));
+      await tester.tap(find.text('Nouvelle note'));
       await tester.pump();
       final note = displayedNote();
-      await tester.tap(find.text('Reveal chord'));
+      await tester.tap(find.text("Révéler l'accord"));
       await tester.pump();
 
       expect(
@@ -129,7 +141,7 @@ void main() {
       );
     });
 
-    testWidgets('switching back to ascendant reveals the ascending chord',
+    testWidgets('revenir sur ascendant révèle l\'accord ascendant',
         (tester) async {
       await tester.pumpWidget(const MyApp());
       await tester.tap(find.byType(Switch));
@@ -137,10 +149,10 @@ void main() {
       await tester.tap(find.byType(Switch));
       await tester.pump();
 
-      await tester.tap(find.text('New note'));
+      await tester.tap(find.text('Nouvelle note'));
       await tester.pump();
       final note = displayedNote();
-      await tester.tap(find.text('Reveal chord'));
+      await tester.tap(find.text("Révéler l'accord"));
       await tester.pump();
 
       expect(
@@ -149,13 +161,13 @@ void main() {
       );
     });
 
-    testWidgets('toggling after a reveal hides the answer and keeps the note',
+    testWidgets('changer de direction après une révélation cache la réponse et garde la note',
         (tester) async {
       await tester.pumpWidget(const MyApp());
-      await tester.tap(find.text('New note'));
+      await tester.tap(find.text('Nouvelle note'));
       await tester.pump();
       final note = displayedNote();
-      await tester.tap(find.text('Reveal chord'));
+      await tester.tap(find.text("Révéler l'accord"));
       await tester.pump();
 
       await tester.tap(find.byType(Switch));
@@ -165,7 +177,7 @@ void main() {
       expect(revealOnPressed(tester), isNotNull);
       expect(displayedNote(), note);
 
-      await tester.tap(find.text('Reveal chord'));
+      await tester.tap(find.text("Révéler l'accord"));
       await tester.pump();
 
       expect(
