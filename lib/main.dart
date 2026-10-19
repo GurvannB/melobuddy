@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:melody/colors.dart';
+import 'package:melody/pages/chords.page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,55 +14,43 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Melody',
       theme: ThemeData(
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary).copyWith(
+          primary: AppColors.primary,
+          onPrimary: AppColors.paper,
+          surface: AppColors.base,
+          onSurface: AppColors.contrast,
+        ),
+        scaffoldBackgroundColor: AppColors.base,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.base,
+          foregroundColor: AppColors.contrast,
+          scrolledUnderElevation: 0,
+        ),
+        cardTheme: CardThemeData(
+          color: AppColors.paper,
+          elevation: 0,
+          margin: EdgeInsets.zero,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+            side: const BorderSide(color: AppColors.divider),
+          ),
+        ),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: AppColors.primary,
+            foregroundColor: AppColors.paper,
+            disabledBackgroundColor: AppColors.divider,
+            disabledForegroundColor: AppColors.contrast.withValues(alpha: 0.4),
+            elevation: 0,
+            padding: const EdgeInsets.symmetric(vertical: 16),
+            textStyle: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(14),
             ),
-          ],
+          ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
+      home: const ChordsPage(),
     );
   }
 }
