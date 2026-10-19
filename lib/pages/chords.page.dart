@@ -12,26 +12,27 @@ class ChordsPage extends StatefulWidget {
 
 class _ChordsPageState extends State<ChordsPage> {
   bool _mustRevealAnswer = false;
-  ChordDir chordDir = ChordDir.asc;
+  ChordDir _chordDir = ChordDir.asc;
   Note? _note;
+  final _random = Random();
 
-  void getNewNote() {
-    Note newNote = Note.values[Random().nextInt(Note.values.length)];
+  void _getNewNote() {
+    Note newNote = Note.values[_random.nextInt(Note.values.length)];
     setState(() {
       _mustRevealAnswer = false;
       _note = newNote;
     });
   }
 
-  void revealAnswer() {
+  void _revealAnswer() {
     setState(() {
       _mustRevealAnswer = true;
     });
   }
 
-  void onChangeDir(bool desc) {
+  void _onChangeDir(bool desc) {
     setState(() {
-      chordDir = desc ? ChordDir.desc : ChordDir.asc;
+      _chordDir = desc ? ChordDir.desc : ChordDir.asc;
       _mustRevealAnswer = false;
     });
   }
@@ -40,8 +41,8 @@ class _ChordsPageState extends State<ChordsPage> {
   Widget build(BuildContext context) {
     final colors = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
-    final muted = colors.onSurface.withValues(alpha: 0.3);
-    final isDesc = chordDir == ChordDir.desc;
+    final muted = colors.onSurface.withValues(alpha: 0.5);
+    final isDesc = _chordDir == ChordDir.desc;
     final activeDir = textTheme.titleMedium!.copyWith(color: colors.primary);
     final inactiveDir = textTheme.titleMedium!.copyWith(
       color: colors.onSurface.withValues(alpha: 0.5),
@@ -58,88 +59,93 @@ class _ChordsPageState extends State<ChordsPage> {
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 480),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        ChordDir.asc.toString(),
-                        style: isDesc ? inactiveDir : activeDir,
-                      ),
-                      const SizedBox(width: 16),
-                      Switch(value: isDesc, onChanged: onChangeDir),
-                      const SizedBox(width: 16),
-                      Text(
-                        ChordDir.desc.toString(),
-                        style: isDesc ? activeDir : inactiveDir,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    children: [
-                      Text("NOTE", style: textTheme.labelMedium),
-                      const SizedBox(height: 4),
-                      Text(
-                        _note?.label ?? "?",
-                        style: textTheme.displayMedium!.copyWith(
-                          color: _note == null ? muted : colors.primary,
-                          fontWeight: FontWeight.w700,
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 480),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ChordDir.asc.toString(),
+                          style: isDesc ? inactiveDir : activeDir,
                         ),
-                      ),
-                    ],
+                        const SizedBox(width: 16),
+                        Switch(value: isDesc, onChanged: _onChangeDir),
+                        const SizedBox(width: 16),
+                        Text(
+                          ChordDir.desc.toString(),
+                          style: isDesc ? activeDir : inactiveDir,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 16),
-              Card(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 20),
-                  child: Column(
-                    children: [
-                      Text("ACCORD", style: textTheme.labelMedium),
-                      const SizedBox(height: 4),
-                      if (_mustRevealAnswer && _note != null)
+                const SizedBox(height: 16),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      children: [
+                        Text("NOTE", style: textTheme.labelMedium),
+                        const SizedBox(height: 4),
                         Text(
-                          _note!.getChord(chordDir).join(" - "),
-                          style: textTheme.headlineMedium!.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        )
-                      else
-                        Text(
-                          "···",
-                          style: textTheme.headlineMedium!.copyWith(
-                            color: muted,
+                          _note?.label ?? "?",
+                          style: textTheme.displayMedium!.copyWith(
+                            color: _note == null ? muted : colors.primary,
+                            fontWeight: FontWeight.w700,
                           ),
                         ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 24),
-              ElevatedButton(
-                onPressed: getNewNote,
-                child: const Text("Nouvelle note"),
-              ),
-              const SizedBox(height: 12),
-              ElevatedButton(
-                onPressed: _mustRevealAnswer || _note == null ? null : revealAnswer,
-                child: const Text("Révéler l'accord"),
-              ),
-            ],
+                const SizedBox(height: 16),
+                Card(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 20),
+                    child: Column(
+                      children: [
+                        Text("ACCORD", style: textTheme.labelMedium),
+                        const SizedBox(height: 4),
+                        if (_mustRevealAnswer && _note != null)
+                          Text(
+                            _note!.getChord(_chordDir).join(" - "),
+                            style: textTheme.headlineMedium!.copyWith(
+                              fontWeight: FontWeight.w600,
+                            ),
+                          )
+                        else
+                          Text(
+                            "···",
+                            style: textTheme.headlineMedium!.copyWith(
+                              color: muted,
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: _getNewNote,
+                  child: const Text("Nouvelle note"),
+                ),
+                const SizedBox(height: 12),
+                ElevatedButton(
+                  onPressed: _mustRevealAnswer || _note == null
+                      ? null
+                      : _revealAnswer,
+                  child: const Text("Révéler l'accord"),
+                ),
+              ],
+            ),
           ),
         ),
       ),
