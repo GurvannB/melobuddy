@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:melody/main.dart';
-import 'package:melody/types.dart';
+import 'package:melobuddy/main.dart';
+import 'package:melobuddy/types.dart';
 
 Note displayedNote() =>
     Note.values.singleWhere((n) => find.text(n.label).evaluate().isNotEmpty);

@@ -1,4 +1,4 @@
-package fr.jetdev.melody
+package fr.melobuddy
 
 import io.flutter.embedding.android.FlutterActivity
 

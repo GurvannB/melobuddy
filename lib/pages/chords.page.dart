@@ -1,7 +1,7 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:melody/types.dart';
+import 'package:melobuddy/types.dart';
 
 class ChordsPage extends StatefulWidget {
   const ChordsPage({super.key});

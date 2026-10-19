@@ -1,4 +1,4 @@
-# melody
+# Melobuddy
 
 Project to help with Solfege
 

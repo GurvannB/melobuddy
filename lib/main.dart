@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:melody/colors.dart';
-import 'package:melody/pages/chords.page.dart';
+import 'package:melobuddy/colors.dart';
+import 'package:melobuddy/pages/chords.page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Melody',
+      title: 'Melobuddy',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: AppColors.primary).copyWith(
           primary: AppColors.primary,
