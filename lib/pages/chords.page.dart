@@ -12,6 +12,7 @@ class ChordsPage extends StatefulWidget {
 
 class _ChordsPageState extends State<ChordsPage> {
   bool _mustRevealAnswer = false;
+  ChordDir chordDir = ChordDir.asc;
   Note? _note;
 
   void getNewNote() {
@@ -28,6 +29,13 @@ class _ChordsPageState extends State<ChordsPage> {
     });
   }
 
+  void onChangeDir(bool desc) {
+    setState(() {
+      chordDir = desc ? ChordDir.desc : ChordDir.asc;
+      _mustRevealAnswer = false;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -38,14 +46,24 @@ class _ChordsPageState extends State<ChordsPage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            ElevatedButton(onPressed: getNewNote, child: const Text("New chord")),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(ChordDir.asc.toString()),
+                const SizedBox(width: 20),
+                Switch(value: chordDir == ChordDir.desc, onChanged: onChangeDir),
+                const SizedBox(width: 20),
+                Text(ChordDir.desc.toString()),
+              ],
+            ),
+            ElevatedButton(onPressed: getNewNote, child: const Text("New note")),
             if (_note != null) Text(_note!.label),
             ElevatedButton(
               onPressed: _mustRevealAnswer ? null : revealAnswer,
-              child: const Text("Reveal answer"),
+              child: const Text("Reveal chord"),
             ),
             if (_mustRevealAnswer && _note != null)
-              Text(_note!.getChord().join(" - ")),
+              Text(_note!.getChord(chordDir).join(" - ")),
           ],
         ),
       ),
